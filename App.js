@@ -1,20 +1,24 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import * as React from 'react';
+import TokenContext from './utils/context';
+import Navigate from './screens/Navigate';
+import { GetToken } from './utils/authCheck';
+
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+  const [currentToken, onChangeToken] = React.useState("")
+  React.useEffect(()=>{
+    getToken()
+  })
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+  const getToken = async() =>{
+    const t = await GetToken()
+    console.log("Get token from store")
+    onChangeToken(t)
+  }
+  console.log("App, currToken:", currentToken)
+  return (
+    <TokenContext.Provider value={{ currentToken, onChangeToken }}>
+      <Navigate />
+    </TokenContext.Provider>
+  )
+}
