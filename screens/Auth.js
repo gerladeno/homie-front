@@ -8,18 +8,15 @@ import { SaveToken } from '../utils/authCheck';
 
 const api = new Api();
 
-export default class Auth extends React.Component {
-    constructor(props) {
-        super(props)
-    }
-
-    render() {
-        const Stack = createNativeStackNavigator();
-        return <Stack.Navigator defaultScreenOptions={'Confirm'}>
+const Stack = createNativeStackNavigator();
+export default function Auth()
+{
+    return (
+        <Stack.Navigator defaultScreenOptions={'Confirm'}>
             <Stack.Screen name="InputPhone" component={InputPhone} />
             <Stack.Screen name="Confirm" component={Confirm} initialParams={this.props} />
         </Stack.Navigator>
-    }
+    )
 }
 
 function InputPhone({ navigation }) {
@@ -42,13 +39,11 @@ function InputPhone({ navigation }) {
                     navigation.navigate('Confirm', { phone: phoneNumber })
                 }
                 else {
-                    console.log(r.data)
                     onChangeLoadingStatus(false)
                     onChangeErrorMessage("Ошибка при отправке СМС")
                 }
             })
             .catch((e) => {
-                console.log(e)
                 onChangeLoadingStatus(false)
                 onChangeErrorMessage("Ошибка при отправке СМС")
             })
@@ -124,7 +119,6 @@ function Confirm({ navigation, route }) {
                     console.log("success")
                 }
                 else {
-                    console.log(r.data)
                     onChangeLoadingStatus(false)
                     onChangeErrorMessage("Error during confirmation")
                 }

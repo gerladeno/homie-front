@@ -4,7 +4,8 @@ import { StatusBar } from 'expo-status-bar';
 import TokenContext from '../utils/context';
 import { SaveToken } from '../utils/authCheck';
 export default function Settings() {
-    const {currentToken, onChangeToken} = React.useContext(TokenContext)
+    const { currentToken, onChangeToken } = React.useContext(TokenContext)
+    console.log("Settings")
     return (
         <View style={styles.container}>
             <Text>Settings screens</Text>
@@ -12,9 +13,7 @@ export default function Settings() {
                 onPress={() => {
                     onChangeToken("")
                     SaveToken("")
-
                 }}></Button>
-            <StatusBar style="auto" />
         </View>)
 }
 

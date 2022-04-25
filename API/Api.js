@@ -5,7 +5,6 @@ export default class Api {
     this.api_token = null;
     this.client = null;
     BASE_URL = "http://192.168.1.222:3000/public/v1"
-    console.log(`baseursl=${BASE_URL}`)
     this.api_url = BASE_URL  //process.env.HOMIE_API;
   }
   init = () => {
@@ -23,8 +22,6 @@ export default class Api {
   sendSms = (phone) => {
     // let r = this.init().get("/authenticate", { phone: phone });
     let r = this.init().get(`/authenticate?phone=${phone}`);
-    console.log("request")
-    console.log(r)
     return r
   };
 
