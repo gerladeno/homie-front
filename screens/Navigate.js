@@ -8,6 +8,7 @@ import Auth from "./Auth";
 import TokenContext from "../utils/context";
 import Home from "./Home";
 import Settings from "./Settings";
+import Profile from "./Profile"
 // const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 
@@ -22,6 +23,7 @@ export default function Navigate() {
                 < NavigationContainer >
                     <Drawer.Navigator >
                         <Drawer.Screen name="Home" component={Home} />
+                        <Drawer.Screen name="Profile" component={Profile} />
                         <Drawer.Screen name="Settings" component={Settings} />
                     </Drawer.Navigator >
                 </NavigationContainer >)

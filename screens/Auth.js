@@ -2,15 +2,13 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Button, Input } from '@rneui/themed';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import Api from '../API/Api'; //TODO use path ~
+import { AuthApi } from '../API/Api'; //TODO use path ~
 import TokenContext from '../utils/context';
 import { SaveToken } from '../utils/authCheck';
 
-const api = new Api();
-
 const Stack = createNativeStackNavigator();
-export default function Auth()
-{
+
+export default function Auth() {
     return (
         <Stack.Navigator defaultScreenOptions={'Confirm'}>
             <Stack.Screen name="InputPhone" component={InputPhone} />
@@ -32,7 +30,8 @@ function InputPhone({ navigation }) {
         }
         onChangeErrorMessage("")
         onChangeLoadingStatus(true)
-        api.sendSms(phoneNumber)
+
+        AuthApi.getInstance().sendSms(phoneNumber)
             .then((r) => {
                 if (r.data.data === "Ok") {
                     onChangeLoadingStatus(false)
@@ -109,7 +108,7 @@ function Confirm({ navigation, route }) {
         }
         onChangeErrorMessage("")
         onChangeLoadingStatus(true)
-        api.confirm(phone, confirmCode)
+        AuthApi.getInstance().confirm(phone, confirmCode)
             .then((r) => {
                 const token = r.data.data.token;
                 if (token) {
