@@ -1,5 +1,4 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Button, Input } from '@rneui/themed';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { AuthApi } from '../API/Api'; //TODO use path ~
