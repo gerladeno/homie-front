@@ -1,9 +1,12 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { TextInput, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
+import { Assets, Colors, Spacings, Typography, View, Text, Button, Keyboard, Incubator } from 'react-native-ui-lib'; //eslint-disable-line
+const { TextField } = Incubator;
 import { AuthApi } from '../API/Api'; //TODO use path ~
 import TokenContext from '../utils/context';
 import { SaveToken } from '../utils/authCheck';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -18,17 +21,17 @@ export default function Auth() {
 
 function InputPhone({ navigation }) {
     const [phoneNumber, onChangePhoneNumber] = React.useState("+79775298984")
-    const [errorMessage, onChangeErrorMessage] = React.useState("")
     const [loading, onChangeLoadingStatus] = React.useState(false)
+    const phoneInput = React.createRef();
 
     const onSubmit = () => {
-        const { validate, message } = CheckPhoneNumber(phoneNumber)
-        if (!validate) {
-            onChangeErrorMessage(message)
+
+
+        const valid = phoneInput.current?.validate?.();
+        if (!valid) {
             return
         }
-        onChangeErrorMessage("")
-        onChangeLoadingStatus(true)
+        // onChangeLoadingStatus(true)
 
         AuthApi.getInstance().sendSms(phoneNumber)
             .then((r) => {
@@ -48,63 +51,62 @@ function InputPhone({ navigation }) {
     }
 
     return (
-        <View style={styles.container}>
-            <Input
-                placeholder='Input phone number'
-                errorStyle={{ color: 'red' }}
-                errorMessage={errorMessage}
-                labelStyle={{ marginHorizontal: 50 }}
-                dataDetectorTypes='phoneNumber'
-                keyboardType='phone-pad'
-                onSubmitEditing={() => onSubmit()}
-                onChangeText={(i) => onChangePhoneNumber(i)}
-                value={phoneNumber}
-            />
-            <Button
-                title="Send sms"
-                titleStyle={{ fontWeight: '300' }}
-                loading={loading}
-                buttonStyle={{
-                    backgroundColor: 'rgba(111, 202, 186, 1)',
-                    borderColor: 'transparent',
-                }}
-                containerStyle={{
-                    alignSelf: 'stretch',
-                    height: 50,
-                    marginHorizontal: 50,
-                    marginVertical: 50
-                }}
-                onPress={() => onSubmit()}
-            />
-        </View>)
+        <View flex>
+            <View flex paddingH-25 paddingT-120>
+                <TextField fieldStyle={styles.withUnderline}
+                    ref={phoneInput}
+                    placeholder={'Phone number'}
+                    floatingPlaceholder
+                    onChangeText={(value) => onChangePhoneNumber(value)}
+                    enableErrors={true}
+                    validate={['required', (value) => validatePhoneNumber(value)]}
+                    validationMessage={['Field is required', 'Invalid phone number']}
+                    keyboardType='phone-pad'
+                    onSubmitEditing={() => onSubmit()}
+                />
+            </View>
+            <View marginT-20>
+
+                <Button
+                    fullWidth
+                    label="Send sms"
+                    onPress={() => onSubmit()}
+                >
+                </Button>
+            </View>
+
+        </View>
+    )
 }
 
-function CheckPhoneNumber(phone) {
+function validatePhoneNumber(phone) {
     var regexp = "^([\+]\d)?([0-9]{11})";
 
     const errorMessage = "Incorrect phone number"
     if (phone.length === 12 && phone[0] === '+') {
-        return { validate: true, message: "" }
+        return true
     }
     if (phone.length === 11 && phone[0] === '8') {
-        return { validate: true, message: "" }
+        return true
     }
-    return { validate: false, message: errorMessage }
+    return false
 }
 
 
 function Confirm({ navigation, route }) {
-    const [confirmCode, onChangeConfirmCode] = React.useState("8984")
+    const [confirmCode, onChangeConfirmCode] = React.useState("")
     const [errorMessage, onChangeErrorMessage] = React.useState("")
     const [loading, onChangeLoadingStatus] = React.useState(false)
     const { token, onChangeToken } = React.useContext(TokenContext)
     const { phone } = route.params;
+
+    const codeInput = React.createRef()
     const onSubmit = () => {
-        const { validate, message } = CheckConfirmCode(confirmCode)
-        if (!validate) {
-            onChangeErrorMessage(message)
+        const valid = codeInput.current?.validate?.();
+        if (!valid){
             return
         }
+
         onChangeErrorMessage("")
         onChangeLoadingStatus(true)
         AuthApi.getInstance().confirm(phone, confirmCode)
@@ -129,61 +131,38 @@ function Confirm({ navigation, route }) {
     }
 
     return (
-        <View style={styles.container}>
-            <Input
-                placeholder='Input confirm code'
-                errorStyle={{ color: 'red' }}
-                errorMessage={errorMessage}
-                labelStyle={{ marginHorizontal: 50 }}
-                dataDetectorTypes='phoneNumber'
-                keyboardType='number-pad'
-                onSubmitEditing={() => onSubmit()}
-                onChangeText={(i) => onChangeConfirmCode(i)}
-                value={confirmCode}
-            />
-            <Button
-                title="Confirm"
-                titleStyle={{ fontWeight: '300' }}
-                loading={loading}
-                buttonStyle={{
-                    backgroundColor: 'rgba(111, 202, 186, 1)',
-                    borderColor: 'transparent',
-                }}
-                containerStyle={{
-                    alignSelf: 'stretch',
-                    height: 50,
-                    marginHorizontal: 50,
-                    marginVertical: 50
-                }}
-                onPress={() => onSubmit()}
-            />
+        <View flex>
+            <View flex paddingH-25 paddingT-120>
+                <TextField fieldStyle={styles.withUnderline}
+                    ref={codeInput}
+                    placeholder={'Input confirm code'}
+                    floatingPlaceholder
+                    enableErrors={true}
+                    validate={['required', (value) => value.length > 3]}
+                    validationMessage={['Field is required', 'too short code']}
+                    onSubmitEditing={() => onSubmit()}
+                    keyboardType='number-pad'
+                    onChangeText={(i) => onChangeConfirmCode(i)}
+                    value={confirmCode}
+                />
+            </View>
+
+            <View marginT-20>
+
+                <Button
+                    fullWidth
+                    label="Confirm"
+                    onPress={() => onSubmit()}
+                >
+                </Button>
+            </View>
         </View>)
 }
 
-function CheckConfirmCode(code) {
-    const errorMessage = "Length confirm code must be more then four"
-    if (code.length < 3) {
-        return { validate: false, message: errorMessage }
-    }
-
-    return { validate: true, message: "" }
-
-}
-
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingHorizontal: 15
-    },
-    input: {
-        height: 40,
-        alignSelf: 'stretch',
-        margin: 12,
-        width: 180,
-        borderWidth: 1,
-        padding: 10,
-    },
-});
+    withUnderline: {
+        borderBottomWidth: 1,
+        borderColor: Colors.$outlineDisabledHeavy,
+        paddingBottom: 4
+    }
+})
