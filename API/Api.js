@@ -40,7 +40,7 @@ const CoreApi = (function () {
     const token = GetToken()
     console.log("Create core client with token:", token)
 
-    const headers = { Authorization: `Bearer ${this.api_token}` }
+    const headers = { Authorization: `Bearer ${token}` }
     return client = axios.create({
       baseURL: "http://192.168.1.222:3001/",
       timeout: 31000,
@@ -48,7 +48,7 @@ const CoreApi = (function () {
     })
   }
 
-  function regions(phone) {
+  function regions() {
     return client.get(`/static/regions`);
   }
 

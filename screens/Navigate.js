@@ -9,6 +9,7 @@ import TokenContext from "../utils/context";
 import Home from "./Home";
 import Settings from "./Settings";
 import Profile from "./Profile"
+import SearchCriteria from "./SearchCriteria"
 // const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 
@@ -24,6 +25,7 @@ export default function Navigate() {
                     <Drawer.Navigator >
                         <Drawer.Screen name="Home" component={Home} />
                         <Drawer.Screen name="Profile" component={Profile} />
+                        <Drawer.Screen name="Search critera" component={SearchCriteria} />
                         <Drawer.Screen name="Settings" component={Settings} />
                     </Drawer.Navigator >
                 </NavigationContainer >)
