@@ -32,12 +32,12 @@ const AuthApi = (function () {
   return { getInstance }
 })()
 
-const CoreApi = (function () {
+const CoreApi = (async function () {
   let instance = null
-  let client = createClient()
+  let client = await createClient()
 
-  function createClient() {
-    const token = GetToken()
+  async function createClient() {
+    const token = await GetToken()
     console.log("Create core client with token:", token)
 
     const headers = { Authorization: `Bearer ${token}` }
@@ -57,11 +57,23 @@ const CoreApi = (function () {
   }
 
   function setConfig(config) {
-    return client.post(`public/v1/config`, config)
+    return client.put(`public/v1/config`, config)
+  }
+
+  function getMatch(count) {
+    return client.get(`public/v1/matches?count=${count}`)
+  }
+
+  function like(uuid, superLike) {
+    return client.get(`public/v1/like/${uuid}?super=${superLike}`)
+  }
+
+  function dislike(uuid) {
+    return client.get(`public/v1/dislike/${uuid}`)
   }
 
   function createInstance() {
-    return instance = { regions, getConfig, setConfig }
+    return instance = { regions, getConfig, setConfig, getMatch, like, dislike }
   }
 
   function getInstance() {

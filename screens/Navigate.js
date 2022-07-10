@@ -1,7 +1,6 @@
 import { useContext, useEffect } from "react";
 
 import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
 import Auth from "./Auth";
@@ -13,7 +12,6 @@ import SearchCriteria from "./SearchCriteria"
 // const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 
-console.log("Navigate")
 export default function Navigate() {
     const { currentToken, onChangeToken } = useContext(TokenContext)
     console.log("currentToken:", currentToken)
